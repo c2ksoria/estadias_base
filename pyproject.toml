@@ -7,6 +7,7 @@ authors = ["Carlos Valdemar Soria <carlosvsoria1982@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = "^4.1"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 
