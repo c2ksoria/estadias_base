@@ -8,6 +8,8 @@ authors = ["Carlos Valdemar Soria <carlosvsoria1982@gmail.com>"]
 python = "^3.8"
 Django = "^4.1"
 python-dotenv = "^0.20.0"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "^6.3.0"}
+Pillow = "^9.2.0"
 
 [tool.poetry.dev-dependencies]
 
