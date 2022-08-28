@@ -7,3 +7,4 @@ poetry.lock
 test
 estadiasyviajes/.env
 estadiasyviajes/media
+estadiasyviajes/images
