@@ -5,3 +5,5 @@ estadiasyviajes/core/migrations/__pycache__/
 
 poetry.lock
 test
+estadiasyviajes/.env
+estadiasyviajes/media

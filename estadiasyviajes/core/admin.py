@@ -11,3 +11,6 @@ from .models import *
 admin.site.register(Propietary)
 admin.site.register(Status)
 admin.site.register(Commercial)
+admin.site.register(Province)
+admin.site.register(ProvincePictures)
+admin.site.register(Plan)
