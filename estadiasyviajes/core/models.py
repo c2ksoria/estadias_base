@@ -13,9 +13,9 @@ class Status(models.Model):
 class Plan(models.Model):
     Status=models.ForeignKey(Status, on_delete=models.SET_NULL,null=True,verbose_name='Status')
     PlanName=models.CharField(max_length=50, blank=False, verbose_name='Name')
-    CommercialQty=models.IntegerField(blank=False, null=False,verbose_name='Commercial Quantity')
-    AdviceQty=models.IntegerField(blank=False, null=False,verbose_name='Advice Quantity')
-    CommercialImagesQty=models.IntegerField(blank=False, null=False,verbose_name='Commercial Images Quantity', default=0)
+    CommercialQty=models.IntegerField(blank=False, null=False,verbose_name='Commercial Qty')
+    AdviceQty=models.IntegerField(blank=False, null=False,verbose_name='Advice Qty')
+    CommercialImagesQty=models.IntegerField(blank=False, null=False,verbose_name='Images Qty', default=0)
     CreationDate=models.DateField(auto_now=True, null=True)
     CreationTime=models.TimeField(auto_now=True, null=True)
 
@@ -39,6 +39,7 @@ class Propietary(models.Model):
     Plan=models.ForeignKey(Plan, on_delete=models.SET_NULL,null=True,verbose_name='Plan')
     User=models.OneToOneField(User,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
     Image= models.ImageField(upload_to='images/', null=True, blank=True)
+    BioPropietary=models.CharField(max_length=140, null=False, verbose_name='Biography', default="Sin Biografía por defecto")
     def __str__(self):
         return self.User.username
 

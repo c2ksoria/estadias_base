@@ -8,9 +8,14 @@ from .models import *
     # list_filter = ('NombreEmpresa','CuitEmpresa')
 
 
+class PlanAdmin(admin.ModelAdmin):
+    list_display=('id','PlanName','CommercialQty', 'AdviceQty', 'CommercialImagesQty')
+    search_fields=('id','CommercialQty')
+
+
 admin.site.register(Propietary)
 admin.site.register(Status)
 admin.site.register(Commercial)
 admin.site.register(Province)
 admin.site.register(ProvincePictures)
-admin.site.register(Plan)
+admin.site.register(Plan, PlanAdmin)
