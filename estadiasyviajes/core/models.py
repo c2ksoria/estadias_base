@@ -68,7 +68,8 @@ class Commercial(models.Model):
 #         return self.SocialNameNetwork
 
 class SocialNetworksGlobal(models.Model):
-    SocialName=models.ForeignKey(Status, on_delete=models.SET_NULL,null=True,verbose_name='SocialName')
+    PropietaryModel=models.ForeignKey(Propietary, on_delete=models.SET_NULL,null=True,verbose_name='Propietary')
+    CommercialModel=models.ForeignKey(Commercial, on_delete=models.SET_NULL,null=True,verbose_name='Commercial')
 
     def __str__(self):
         return self.SocialName
@@ -88,7 +89,7 @@ class PropietaryPictures(models.Model):
 class Province(models.Model):
     Status=models.ForeignKey(Status, on_delete=models.SET_NULL,null=True,verbose_name='Status')
     ProvinceName=models.CharField(max_length=50, verbose_name='ProvinceName')
-    ResumeProvince=models.CharField(max_length=140, null=False, verbose_name='ResumeText')
+    TitleProvince=models.CharField(max_length=140, null=False, verbose_name='ResumeText')
     LongTextProvince=models.CharField(max_length=140, null=False, verbose_name='LargeText')
     def __str__(self):
         return self.ProvinceName
