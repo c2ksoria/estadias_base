@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block name %}
+<a href="#" class="d-block">{{propietary}}</a>
+{% endblock %}
+
+{% block wrapper %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-4">
+          {% if titulo %}
+          <h1 class="m-0">{{ titulo }}</h1>
+
+          {% endif %}
+
+          {% if object_list %}
+
+
+        </div>
+
+
+      </div><!-- /.col -->
+
+      <div class="col justify-content-end">
+        {% for item in object_list %}
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">{{ item.PlanName }}
+              {% if plan|stringformat:'s'  == item.PlanName|stringformat:'s'  %}
+              <i class="bi bi-check-circle-fill" style="color: green">(Actual)</i>
+          {% endif %}
+            </h3>
+          </div> <!-- /.card-body -->
+          <div class="card-body">
+            <div>
+              <p><strong>Comercios: {{ item.CommercialQty }} </strong></p>
+              <p><strong>Avisos: {{ item.AdviceQty }} </strong></p>
+              <p><strong>Fotos: {{ item.CommercialImagesQty }}</strong></p>
+             
+            </div>
+
+          </div><!-- /.card-body -->
+        </div>
+
+
+        {% endfor %}
+        {% endif %}
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+
+
+  {% endblock %}

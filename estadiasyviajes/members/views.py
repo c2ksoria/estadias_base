@@ -9,7 +9,7 @@ from .form import LoginForm
 class UserLoginView(LoginView):
     template_name= 'registration/login.html'
     form_class = LoginForm
-    # success_url= reverse_lazy('home1')
+    # success_url= reverse_lazy('home')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titulo']='Iniciar Sesion'

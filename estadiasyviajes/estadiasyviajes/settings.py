@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'members',
     'phonenumber_field',
 ]
 
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'estadiasyviajes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'./core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,4 +128,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = 'media/'  
   
 # Path where media is stored  
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+LOGIN_REDIRECT_URL = 'propietary'
+LOGOUT_REDIRECT_URL = 'home1'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'core/static'),
+)

@@ -3,6 +3,7 @@ estadiasyviajes/estadiasyviajes/__pycache__
 estadiasyviajes/core/__pycache__
 estadiasyviajes/core/migrations/
 estadiasyviajes/core/migrations/__pycache__/
+estadiasyviajes/members/__pycache__/
 
 poetry.lock
 test
