@@ -70,7 +70,8 @@ class AccommodationType(models.Model):
 class Commercial(models.Model):
     User=models.ForeignKey(Propietary,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
     CommercialName=models.CharField(max_length=50, verbose_name='Name')
-    CommercialAdress=models.CharField(max_length=50, verbose_name='Adress', default="Without adrress")
+    CommercialAdress=models.CharField(max_length=50, verbose_name='Adress')
+    ResumeText=models.CharField(max_length=140, verbose_name='Resume')
     Province=models.ForeignKey(Province, on_delete=models.SET_NULL,null=True,verbose_name='Province')
     lat = models.DecimalField(('Latitude'), max_digits=10, decimal_places=8)
     lng = models.DecimalField(('Longitude'), max_digits=11, decimal_places=8)
@@ -166,10 +167,10 @@ class CommercialPictures(models.Model):
     Image= models.ImageField(upload_to='images/commercial', null=True, blank=True)
     Commercial=models.ForeignKey(Commercial, on_delete=models.SET_NULL,null=True,verbose_name='Commercial')
     ResumeTextImage=models.CharField(max_length=140, null=False, verbose_name='ResumeText')
-    SubIndex=models.IntegerField(blank=False, null=False,verbose_name='Index Picture Order', default=0)
+    SubIndex=models.IntegerField(blank=False, null=True,verbose_name='Index Picture Order', default=0)
     
     def __str__(self):
-        return self.Commercial.User.username
+        return self.ResumeTextImage
     class Meta:
         verbose_name_plural = 'Commercial Pictures'
 

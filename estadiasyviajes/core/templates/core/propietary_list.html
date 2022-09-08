@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block name %}
-    <a href="#" class="d-block">{{propietary}}</a>
+    <a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
 {% endblock %}
 
 {% block wrapper %}
@@ -35,17 +35,19 @@
                 <strong>Bio </strong><p>{{ item.BioPropietary }}</p>  
                 <strong>Paquete Contratado </strong><p>{{ item.Plan.PlanName }} 
                   {% if item.Plan.id < 3 %}
-                      <p><a href="/planes">Actualizar plan</a></p>
+                      <p><a href="{% url 'plan' %}">Actualizar plan</a></p>
                   {% else %}
-                  <p><a href="/planes">ver planes</a></p>
+                  <p><a href="{% url 'plan' %}">ver planes</a></p>
                   {% endif %}
                   
                   
-                <img src ="{{item.Image.url}}" alt="" style="max-height:100px" class="img-circle elevation-2">
+                <img src ="{{ item.Image.url }}" alt="" style="max-height:100px" class="img-circle elevation-2">
 
-                <button class="btn btn-primary">
-                  Editar Datos
-                </button>
+                <a href="{% url 'updatePropietary' item.id %}">
+                  <button class="btn btn-primary">
+                    Editar Datos
+                  </button>
+                </a>
               </div>
 
             </div><!-- /.card-body -->

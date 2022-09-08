@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block name %}
+    <a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
+{% endblock %}
+
+
+{% block wrapper %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-4">
+          {% if titulo %}
+          <h1 class="m-0">{{ titulo }}</h1>
+
+          {% endif %}
+
+        </div><!-- /.col -->
+        <div class="col-sm-4 justify-content-end">
+          <!--  -->
+          <!-- <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Starter Page</li>
+          </ol> -->
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+
+
+  <div class="content">
+    <div class="container-fluid">
+      <!-- <h2>Holass1 </h2>
+        <h1>{{ empresa}}</h1> -->
+
+
+     
+
+      <form action="." method="POST">
+        {% if form.errors %}
+
+        {{ form.errors }}
+
+        {% endif %}
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          {{ form.Status.label }}
+          {{ form.Status }}
+        </div>
+        <div class="input-group mb-6">
+          {{ form.Plan.label }} <br>
+          {{ form.Plan }}
+        </div>
+        <div class="input-group mb-6">
+          {{ form.User.label }}
+          {{ form.User }}
+        </div>
+        <div class="input-group mb-6">
+          {{ form.Image.label }}
+          {{ form.Image }}
+        </div>
+        <div class="input-group mb-3">
+          {{ form.BioPropietary.label }}
+          {{ form.BioPropietary }}
+        </div>
+
+        <!-- <div class="input-group mb-3">
+          <label for="">
+            {{ form.url.label }}
+          </label>
+          {{ form.url }}
+        </div> -->
+        <div class="row">
+        
+          <!-- /.col -->
+          <div class="col-3">
+            <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+          </div>
+          <!-- /.col -->
+        </div>
+    </div>
+  </div>
+
+</div>
+</form>
+
+
+
+
+
+
+
+
+<!-- /.row -->
+</div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+{% endblock wrapper %}
