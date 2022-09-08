@@ -27,12 +27,12 @@
 
       <div class="col justify-content-end">
         {% for item in object_list %}
-        <div class="card card-primary card-outline">
+        <div class="card card-primary">
           <div class="card-header">
             <h3 class="card-title">{{ item.PlanName }}
               {% if plan|stringformat:'s'  == item.PlanName|stringformat:'s'  %}
-              <i class="bi bi-check-circle-fill" style="color: green">(Actual)</i>
-              <a href="{% url 'planUpdate' id_propietary.id %}"><button class="form-control btn-success">Actualizar plan</button></a>
+              <i class="bi bi-check-circle-fill" style="color: green">(Actual) <a href="{% url 'planUpdate' id_propietary.id %}"><button class="form-control btn-success">Actualizar plan</button></a></i>
+              
               {% endif %}
             </h3>
           </div> <!-- /.card-body -->
