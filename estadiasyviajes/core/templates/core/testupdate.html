@@ -50,26 +50,21 @@
 
         {% endif %}
         {% csrf_token %}
-        <div class="input-group mb-3">
-          {{ formset.Status.label }}
-          {{ formset.Status }}
-        </div>
-        <div class="input-group mb-6">
-          {{ formset.Plan.label }} <br>
-          {{ form.Plan }}
-        </div>
-        <div class="input-group mb-6">
-          {{ form.User.label }}
-          {{ form.User }}
-        </div>
-        <div class="input-group mb-6">
-          {{ form.Image.label }}
-          {{ form.Image }}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.BioPropietary.label }}
-          {{ form.BioPropietary }}
-        </div>
+        <!-- {{ formset.management_form}} -->
+        {% for form in Face_formset %}
+        
+          {{ form }}
+          <br>
+        
+        {% endfor %}
+        {% for form in propietaryForm %}
+        
+          {{ form }}
+          <br>
+        
+        {% endfor %}
+
+
 
         <!-- <div class="input-group mb-3">
           <label for="">

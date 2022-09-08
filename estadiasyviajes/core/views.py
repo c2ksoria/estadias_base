@@ -1,10 +1,13 @@
+from dataclasses import field
 from django.shortcuts import render, HttpResponse, redirect
-from django.views.generic import ListView, UpdateView, CreateView, DeleteView
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView, TemplateView
 
-from core.models import Commercial, Plan, Propietary, CommercialPictures, Status
-from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary
+from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks
+from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary
 
 from django.urls import reverse_lazy
+from django.forms import inlineformset_factory
+
 # CreateView, DetailView, UpdateView, TemplateView, DeleteView
 
 # Create your views here.
@@ -38,6 +41,8 @@ class PlanView(ListView):
         context=super().get_context_data(**kwargs)
         propietary=getPropietary(self.request.user)
         context['propietary']= propietary.User.username
+        context['id_propietary']= propietary
+
         planContratado=propietary.Plan
         context['plan']=planContratado
         context['titulo']= "Planes Disponibles"
@@ -213,3 +218,35 @@ def updatePropietary(request, pk):
     context['propietary']= getPropietary(request.user).User.username
 
     return render(request, 'core/propietary_form.html', context)
+
+class testUpdate(TemplateView):
+    template_name= 'core/testupdate.html'
+    def get(self, request, *args, **kwargs):
+        SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0)
+        PropietaryModel= Propietary.objects.get(id=kwargs['pk'])
+        print(PropietaryModel)
+        propietaryForm=UpdateFormPropietary(instance=PropietaryModel)
+        # # print(propietaryForm)
+        # PropietaryModel=propietary
+        # SocialForm=UpdatePropietarySocialNetworks(instance=PropietaryModel)
+        # # print(SocialForm)
+        name= PropietarySocialNetworks.objects.all()
+        print (name)
+        facebook_name=name.filter(SocialNetworksName_id=4)
+        print (facebook_name)
+        Face_formset=SocialFormSet(instance=PropietaryModel)
+        # print(formset)
+
+        return self.render_to_response({ 'Face_formset': Face_formset, 'propietaryForm': propietaryForm})
+
+class updatePlanPropietary(UpdateView):
+    model=Propietary
+    form_class = updateFormPlanPropietary
+    success_url = reverse_lazy('plan')
+  
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Seleccionar el nuevo plan'
+        context['propietary']= getPropietary(self.request.user).User.username
+        print(context)
+        return context

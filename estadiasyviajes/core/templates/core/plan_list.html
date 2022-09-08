@@ -32,7 +32,8 @@
             <h3 class="card-title">{{ item.PlanName }}
               {% if plan|stringformat:'s'  == item.PlanName|stringformat:'s'  %}
               <i class="bi bi-check-circle-fill" style="color: green">(Actual)</i>
-          {% endif %}
+              <a href="{% url 'planUpdate' id_propietary.id %}"><button class="form-control btn-success">Actualizar plan</button></a>
+              {% endif %}
             </h3>
           </div> <!-- /.card-body -->
           <div class="card-body">

@@ -99,7 +99,7 @@ class PropietarySocialNetworks(models.Model):
     SocialNetworksName=models.ForeignKey(SocialNetworksNames, on_delete=models.SET_NULL,null=True,verbose_name='Social Network Name')
     LinkSocialetwork=models.CharField(max_length=140, null=False, verbose_name='Link Social Network', default="Url empty")
     def __str__(self):
-        return self.PropietaryModel
+        return self.PropietaryModel.User.username + "-" +self.SocialNetworksName.SocialNetworkName
 
 class CommercialSocialNetworks(models.Model):
     CommercialModel=models.ForeignKey(Commercial, on_delete=models.SET_NULL,null=True,verbose_name='Propietary')
