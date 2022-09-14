@@ -1,9 +1,15 @@
 from datetime import datetime, timedelta
+# from msilib.schema import Property
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
+
+
+
 class Status(models.Model):
     StatusName=models.CharField(max_length=50, verbose_name='Name')
     def __str__(self):
@@ -48,16 +54,62 @@ class Province(models.Model):
         return self.ProvinceName
 
 class Propietary(models.Model):
+    User=models.OneToOneField(User,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
     Status=models.ForeignKey(Status, on_delete=models.SET_NULL,null=True,verbose_name='Status')
     Plan=models.ForeignKey(Plan, on_delete=models.SET_NULL,null=True,verbose_name='Plan')
-    User=models.OneToOneField(User,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
     Image= models.ImageField(upload_to='images/', null=True, blank=True)
     BioPropietary=models.CharField(max_length=140, null=False, verbose_name='Biography', default="Sin Biografía por defecto")
     def __str__(self):
         return self.User.username
-
+    
     class Meta:
         verbose_name_plural = 'Propietaries'
+
+@receiver(post_save, sender=Propietary)
+def create_profile(sender, instance, created, **kwargs):
+        if created:
+            print("-----------Sobreescribiendo método de creación Propietary:....")
+            # print("------Instance:-----", instance.id)
+            # print("------kwargs:-----", kwargs)
+            
+            # propietaryInstance=Propietary.objects.get(id=instance.id)
+            # print(propietaryInstance)
+            # print(propietaryInstance.id)
+            # print(propietaryInstance.BioPropietary)
+
+            # new_id=instance.id
+            name=SocialNetworksNames.objects.all()
+            # userInstance=User.objects.get(pk=new_id)
+            # propietaryInstance=Propietary()
+            # propietaryInstance.User=userInstance
+            # print("---------------------")
+            # print(propietaryInstance)
+            # print(userInstance)
+            # print(name)
+            # print("---------------------")
+            # print(propietaryInstance.id)
+            # print(propietaryInstance.User)
+            for item in name:
+                print("-------Creando las redes sociales-------------")
+                print(item.id)
+                # new_instance=PropietarySocialNetworks(id=propietaryInstance)
+                # # new_instance.PropietaryModel=PropietarySocialNetworks(id=propietaryInstance)
+                # new_instance.SocialNetworksNames=SocialNetworksNames.objects.get(id=item.id)
+                
+
+            #     new_instance.Prop
+
+    
+                # print(new_instance)
+                # new_instance.save()
+
+                new_instance=PropietarySocialNetworks()
+                new_instance.PropietaryModel=Propietary.objects.get(id=instance.id)
+                new_instance.SocialNetworksName=SocialNetworksNames.objects.get(id=item.id)
+                new_instance.save()
+
+            print("-----------Saliendo de Sobreescribiendo método de escritura:....")
+
 
 class AccommodationType(models.Model):
     AccommodationTypeName=models.CharField(max_length=140, null=False, verbose_name='Name Accommodation Type')
@@ -99,7 +151,7 @@ class PropietarySocialNetworks(models.Model):
     SocialNetworksName=models.ForeignKey(SocialNetworksNames, on_delete=models.SET_NULL,null=True,verbose_name='Social Network Name')
     LinkSocialetwork=models.CharField(max_length=140, null=False, verbose_name='Link Social Network', default="Url empty")
     def __str__(self):
-        return self.PropietaryModel.User.username + "-" +self.SocialNetworksName.SocialNetworkName
+        return self.PropietaryModel.User.username + "-" + self.SocialNetworksName.SocialNetworkName
 
 class CommercialSocialNetworks(models.Model):
     CommercialModel=models.ForeignKey(Commercial, on_delete=models.SET_NULL,null=True,verbose_name='Propietary')
@@ -184,3 +236,19 @@ class AccomodationPictures(models.Model):
         return self.Accommodation.NameCommercialAccomodation
     class Meta:
         verbose_name_plural = 'Accomodation Pictures'
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        user = self.model(
+            # email=self.normalize_email(email),
+        )
+        print("------------USer Created-------")
+        # user.set_password(password)
+        user.save(using=self._db)
+        return user

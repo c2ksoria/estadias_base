@@ -44,7 +44,7 @@
         <div>
             <form action="." method="post">{% csrf_token %}
                 <p>¿Estás seguro de que quieres borrar el comercio: "{{ object }}"?</p>
-                <p>Recuerda que toda la información asociada as archivos multimedia asociados a "{{ object }}" también serán eliminados</p>
+                <p>Recuerda que toda la información asociada al comercio "{{ object }}" también serán eliminada</p>
                 <input class="btn btn-primary " type="submit" value="Sí, borrar {{ object }}" />
             </form>
             <a href="{% url 'commercial' %}">

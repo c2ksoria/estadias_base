@@ -25,18 +25,19 @@ class CreateFormCommercial(ModelForm):
     class Meta:
         model = Commercial
         fields='__all__'
-        # exclude = ('User', 'Status')
-        
+        exclude = ('User', 'Status')
         widgets = {
 
             'CommercialName': forms.TextInput(attrs={'placeholder': 'Favor de ingresar un nombre Comercial'}),
             'ResumeText': forms.TextInput(attrs={'placeholder': 'Favor de introducir un texto breve que la actividad comercial'}),
             'CommercialAdress': forms.TextInput(attrs={'placeholder': 'Dirección Física Real'}),
             'CommercialEmail': forms.TextInput(attrs={'placeholder': 'Dirección Física Real'}),
+            'ResumeText': forms.Textarea(attrs={'rows': 3}),
         }
         labels = {
             'CommercialName': 'Nombre Comercial',
             'CommercialAdress': 'Dirección',
+            'ResumeText': 'Resumen',
             'Province': 'Provincia',
             'CommercialEmail': 'Teléfono',
             'Province': 'Provincia',
@@ -80,8 +81,11 @@ class CreateFormPropietary(ModelForm):
     class Meta:
         model = Propietary
         fields='__all__'
+        exclude = ('Status',)
         widgets = {
-            
+
+            'BioPropietary': forms.Textarea(attrs={'rows': 3}),
+ 
         }
         labels = {
             'Status': 'Estado',
@@ -104,7 +108,7 @@ class CreatePropietarySocialNetworks(ModelForm):
         model = PropietarySocialNetworks
         fields='__all__'
         widgets = {
-            
+            'SocialNetworksName':  forms.Select(attrs={'disabled': 'True'}),
         }
         labels = {
             'PropietaryModel': 'Propietario',
@@ -113,7 +117,19 @@ class CreatePropietarySocialNetworks(ModelForm):
         }
 
 class UpdatePropietarySocialNetworks(CreatePropietarySocialNetworks):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class']="form-control"
     pass
+    class Meta:
+        model = PropietarySocialNetworks
+        fields='__all__'
+        exclude = ('PropietaryModel',)
+        widgets = {
+            # 'SocialNetworksName':  forms.Select(attrs={'disabled': 'True'}),
+        }
+        
 
 class updateFormPlanPropietary(CreateFormPropietary):
     def __init__(self, *args, **kwargs):

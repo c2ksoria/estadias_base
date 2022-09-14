@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block name %}
-    <a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
+  <a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
 {% endblock %}
 
 
@@ -16,7 +16,7 @@
         <div class="col-sm-4">
           {% if titulo %}
           <h1 class="m-0">{{ titulo }}</h1>
-          <h2>holasss</h2>
+
           {% endif %}
 
         </div><!-- /.col -->
@@ -41,50 +41,54 @@
         <h1>{{ empresa}}</h1> -->
 
 
-     
+      
 
-      <form action="." method="POST">
-        {% if form.errors %}
-
-        {{ form.errors }}
-
-        {% endif %}
-        {% csrf_token %}
-        <!-- {{ formset.management_form}} -->
-        {% for form in Face_formset %}
-        
-          {{ form }}
+        <form action="." method="POST">
+          {% if form.errors %}
+  
+          {{ form.errors }}
+  
+          {% endif %}
+          {% csrf_token %}
+          <!-- {{ formset.management_form}} -->
+          {% for form in propietaryForm %}
+          
+            {{ form.label}}
+            {{ form }}
+            <br>
+          
+          {% endfor %}
           <br>
-        
-        {% endfor %}
-        <!-- {% for form in propietaryForm %}
-        
-          {{ form }}
-          <br>
-        
-        {% endfor %} -->
-
-
-
-        <!-- <div class="input-group mb-3">
-          <label for="">
-            {{ form.url.label }}
-          </label>
-          {{ form.url }}
-        </div> -->
-        <div class="row">
-        
-          <!-- /.col -->
-          <div class="col-3">
-            <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+          {{Face_formset.management_form}}
+          {% for form in Face_formset %}
+          
+            {{ form }}
+            <br>
+          
+          {% endfor %}
+  
+  
+  
+          <!-- <div class="input-group mb-3">
+            <label for="">
+              {{ form.url.label }}
+            </label>
+            {{ form.url }}
+          </div> -->
+          <div class="row">
+          
+            <!-- /.col -->
+            <div class="col-3">
+              <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+            </div>
+            <!-- /.col -->
           </div>
-          <!-- /.col -->
-        </div>
+      </div>
     </div>
+  
   </div>
+  </form>
 
-</div>
-</form>
 
 
 

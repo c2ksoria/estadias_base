@@ -2,7 +2,7 @@ from dataclasses import field
 from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, TemplateView
 
-from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks
+from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames
 from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary
 
 from django.urls import reverse_lazy
@@ -61,10 +61,10 @@ class CommercialView(ListView):
    
      def get_context_data(self, **kwargs):
          context = super().get_context_data(**kwargs)
-         context['titulo'] = 'Campañas Activas'
+         context['titulo'] = 'Comercios Activos'
          propietary=getPropietary(self.request.user)
          context['propietary']= propietary.User.username
-         print("------------------")
+         print("------------------get_context_data")
          paqueteContratado=propietary.Plan
          print(paqueteContratado)
          commercialPayed=Commercial.objects.filter(User=propietary).count()
@@ -136,24 +136,25 @@ class AddImageCommercialview(CreateView):
 
 def AddCommercial(request):
     print("---------AddCommercial----------")
-    print("Slug: ")
+    print("Slug: ",request.user.id)
     form = CreateFormCommercial()
     
     print("USer: ",request.user.id)
     # suspended=Status.objects.get(id=2)
     # print(suspended)
-    propietary= Propietary.objects.get(id=request.user.id)
+    slug=request.user.id
+    propietary= Propietary.objects.get(id=slug)
     print(propietary)
-    form = CreateFormCommercial()
-    form.fields["User"].initial = 1
+    form = CreateFormCommercial(instance=propietary)
+    # form.fields["User"].initial = slug
     # print(form)
 
     
     # form.Status=suspended
     
     if request.method == "POST":
-        print(request.POST)
-        form=CreateFormCommercial(request.POST)
+        # print(request.POST)
+        form=CreateFormCommercial(request.POST, instance=propietary)
         print(form)
         if form.is_valid():
             form.save()
@@ -169,21 +170,52 @@ def AddCommercial(request):
 
 def updateCommercial(request, pk):
     print("---------UpdateCommercial----------")
-    print("Slug: ",pk)
-    commercial= Commercial.objects.get(id=pk)
-    print(commercial)
-    form = CreateFormCommercial(instance=commercial)
+    # print("Slug: ",pk)
+    # commercial= Commercial.objects.get(id=pk)
+    # print(commercial)
+    # form = CreateFormCommercial(instance=commercial)
 
-    if request.method == "POST":
-        print(request.POST)
-        form=CreateFormCommercial(request.POST, instance=commercial)
-        if form.is_valid():
-            form.save()
-            return redirect('/home/commercial')
+    # if request.method == "POST":
+    #     print(request.POST)
+    #     form=CreateFormCommercial(request.POST, instance=commercial)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('/home/commercial')
             
-    context={'form':form}
-    context['propietary']= getPropietary(request.user).User.username
-    return render(request, 'core/createCommercial.html', context)
+    # context={'form':form}
+    # context['propietary']= getPropietary(request.user).User.username
+    # return render(request, 'core/createCommercial.html', context)
+    SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks,UpdatePropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0, can_delete = False)
+    PropietaryModel= Propietary.objects.get(id=request.user.id)
+    # print(PropietaryModel)
+    commercial= Commercial.objects.get(id=pk)
+    # print(commercial)
+    propietaryForm=CreateFormCommercial(instance=commercial)
+    # print(propietaryForm)
+    print("-------------------------------------")
+    Face_formset=SocialFormSet(instance=PropietaryModel)
+    # print(Face_formset)
+    # name=SocialNetworksNames.objects.all()
+    if request.method == "POST":
+        print("---------UpdateCommercial --->>>> POST ----------")
+        # datos=request.POST
+        # for item in datos:
+        #     print(item)
+        propietaryForm=CreateFormCommercial(request.POST,instance=commercial)
+        Face_formset=SocialFormSet(request.POST, instance=PropietaryModel)
+        print(Face_formset)
+        if Face_formset.is_valid() and propietaryForm.is_valid():
+            propietaryForm.save()
+            Face_formset.save()
+            print("----ALL forms are valid------")
+            return redirect('/home/commercial')
+        else:
+            print("Error")
+            # return redirect('/home/commercial')
+            
+    context={'propietaryForm': propietaryForm, 'Face_formset': Face_formset}
+    # print (context)
+    return render(request, 'core/updateCommercial.html', context)
 
 class deleteCommercial(DeleteView):
     model = Commercial
@@ -202,50 +234,78 @@ def getPropietary(user):
     return propietaryName
 
 def updatePropietary(request, pk):
-    print("---------UpdateCommercial----------")
+    print("---------UpdatePropietary----------")
     print("Slug: ",pk)
+    SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks,UpdatePropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0, can_delete = False)
+    PropietaryModel= Propietary.objects.get(id=pk)
     propietary= Propietary.objects.get(id=pk)
-    print(propietary)
-    form = UpdateFormPropietary(instance=propietary)
-    # print (form)
+    propietaryForm=UpdateFormPropietary(instance=propietary)
+    Formset=SocialFormSet( instance=PropietaryModel)
+
     if request.method == "POST":
-        form=UpdateFormPropietary(request.POST, instance=propietary)
-        if form.is_valid():
-            form.save()
+        Formset=SocialFormSet(request.POST, instance=PropietaryModel)
+        propietaryForm=UpdateFormPropietary(request.POST,instance=propietary)
+        # form=UpdateFormPropietary(request.POST, instance=propietary)
+        if Formset.is_valid() and propietaryForm.is_valid():
+            Formset.save()
+            propietaryForm.save()
+            # context=super(updatePropietary).save()
+            context={'saved': 'True'}
             return redirect('/home/propietary')
             
-    context={'form':form}
+    context={'propietaryForm': propietaryForm, 'Formset': Formset}
     context['propietary']= getPropietary(request.user).User.username
 
     return render(request, 'core/propietary_form.html', context)
 
 class testUpdate(TemplateView):
     template_name= 'core/testupdate.html'
+
     def get(self, request, *args, **kwargs):
-        SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0)
+        SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks,UpdatePropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0, can_delete = False)
         PropietaryModel= Propietary.objects.get(id=kwargs['pk'])
-        print(PropietaryModel)
-        propietaryForm=UpdateFormPropietary(instance=PropietaryModel)
+        # print(PropietaryModel)
+        propietaryForm=UpdatePropietarySocialNetworks(instance=PropietaryModel)
+        print("-------------------------------------")
+        Face_formset=SocialFormSet(instance=PropietaryModel)
+        # print(Face_formset)
+        name=SocialNetworksNames.objects.all()
+        return self.render_to_response({ 'Face_formset': Face_formset, 'propietaryForm': propietaryForm})
         # # print(propietaryForm)
         # PropietaryModel=propietary
         # SocialForm=UpdatePropietarySocialNetworks(instance=PropietaryModel)
         # # print(SocialForm)
-        name= PropietarySocialNetworks.objects.all()
-        print (name)
-        facebook_name=name.filter(SocialNetworksName_id=4)
-        print (facebook_name)
-        Face_formset=SocialFormSet(instance=PropietaryModel)
-        # print(formset)
+        # name= PropietarySocialNetworks.objects.all()
+        # print (name)
+        # facebook_name=name.filter(SocialNetworksName_id=4)
+        # print (facebook_name)
+        # print (name)
+        # for item1 in name:
+        #     print(item1.id)
+        # new_instance=PropietarySocialNetworks()
+        # new_instance.PropietaryModel=Propietary.objects.get(id=2)
+        # new_instance.SocialNetworksName=SocialNetworksNames.objects.get(id=4)
+        # print(new_instance)
+        # new_instance.save()
+    def post(self, request, *args, **kwargs):
+        print("Entramos al post")
 
-        return self.render_to_response({ 'Face_formset': Face_formset, 'propietaryForm': propietaryForm})
+    def get_context_data(self, **kwargs):
+        context=super(testUpdate,self).get_context_data(**kwargs)
+        print("holasss")
+        context['propietary']= getPropietary(self.request.user).User.username
+        print(context)
+        return context
 
 class updatePlanPropietary(UpdateView):
     model=Propietary
     form_class = updateFormPlanPropietary
+    template_name = 'core/update_plan.html'
     success_url = reverse_lazy('plan')
+    extra_context = {'propietary': 'goalsdadls'}
   
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(updatePlanPropietary,self).get_context_data(**kwargs)
         context['titulo'] = 'Seleccionar el nuevo plan'
         context['propietary']= getPropietary(self.request.user).User.username
         print(context)
