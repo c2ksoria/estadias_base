@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block name %}
+<a href="{% url 'propietary' %}" class="d-block">{{propietary}}</a>
+{% endblock %}
+
+
+{% block wrapper %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    {% if titulo %}
+                    <h1 class="m-0">{{ titulo }}</h1>
+
+                    {% endif %}
+
+                </div><!-- /.col -->
+                <div class="col-sm-4 justify-content-end">
+                    <!--  -->
+                    <!-- <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Starter Page</li>
+          </ol> -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+
+
+    <div class="content">
+        <div class="container-fluid">
+            <!-- <h2>Holass1 </h2>
+        <h1>{{ empresa}}</h1> -->
+
+
+        <div>
+            <form action="{% url 'DeleteAccomodation' pk1 id_hospedaje  %}" method="post">{% csrf_token %}
+                <p>¿Estás seguro de que quieres borrarlaaaa: "{{ object }}"?</p>
+                <p>Recuerda que toda la información asociada al comercio "{{ object }}" también serán eliminada</p>
+                <input class="btn btn-primary " type="submit" value="Sí, borrar {{ object }}" />
+            </form>
+            <a href="{% url 'commercial' %}">
+                <button class="btn btn-primary ">No, deseo volver</button>
+            </a>
+            
+        </div>
+
+        
+
+ 
+
+
+        </div>
+    </div>
+
+</div>
+</form>
+
+
+
+
+
+
+
+
+
+<!-- /.row -->
+</div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+{% endblock wrapper %}

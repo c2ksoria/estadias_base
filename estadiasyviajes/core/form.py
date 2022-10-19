@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelForm
-from .models import Commercial, CommercialPictures, Propietary, PropietarySocialNetworks
+from .models import Commercial, CommercialPictures, Propietary, PropietarySocialNetworks, Accommodation
 
 # class CreateFormCampana(ModelForm):
 #     def __init__(self, *args, **kwargs):
@@ -88,7 +88,7 @@ class CreateFormPropietary(ModelForm):
  
         }
         labels = {
-            'Status': 'Estado',
+            'Nombre': 'Estado',
             'Plan' : 'Plan',
             'User': 'Usuario',
             'Image': 'Imagen',
@@ -146,3 +146,34 @@ class updateFormPlanPropietary(CreateFormPropietary):
         labels = {
             'Plan' : 'Plan'
         }
+
+class CreateAccommodation(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class']="form-control"
+    
+    class Meta:
+        model = Accommodation
+        fields='__all__'
+        # widgets = {
+        #     'SocialNetworksName':  forms.Select(attrs={'disabled': 'True'}),
+        # }
+        exclude={'CommercialAccommodation'}
+        labels = {
+             'NameCommercialAccomodation': 'Nombre',
+             'Microwave' : 'Microondas',
+             'Oven': 'Horno',
+             'AirConditioning': 'Aire Acondicionado',
+             'Heating':'Calefacción',
+             'garage':'Estacionamiento',
+             'Rooms':'Habitaciones',
+             'SingleBed':'Camas Simples',
+             'DoubleBed':'Camas Dobles',
+             'Crockery':'Valijja',
+             'CheckInTimeFrom':'Checkin desde',
+             'CheckInTimeTo':'Checkin hasta',
+             'CheckOutTimeFrom':'Checkout desde',
+             'CheckOutTimeTo':'Checkout hasta',
+
+         }

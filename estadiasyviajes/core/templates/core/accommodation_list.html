@@ -21,7 +21,7 @@
           {% endif %}
           {% if campanaDisponibles > 0 %}
 
-          <a href="{% url 'addcommercial' %}"><button class="btn btn-primary">Crear Nuevo Comercio</button></a>
+          <a href="{% url 'AccommodationCommercialAdd' pk %}"><button class="btn btn-primary">Crear Nuevo Comercio</button></a>
           <a><p>Quedan {{campanaDisponibles}} Comercios disponibles</p>
             
           </a>
@@ -65,16 +65,16 @@
           <tbody>
             {% for item in object_list%}
             <tr>
-              <th><a href="{% url 'updateCommercial' item.id %}">{{ item.CommercialName }}</a></th>
-              <th>{{ item.CommercialType }}</th>
-              <th id="copiar{{item.id}}"><a href="http://127.0.0.1:8000/publi/{{ item.url }}">http://127.0.0.1:8000/publi/{{ item.url }}</a></th>
+              <th><a href="{% url 'updateCommercial' item.id %}">{{ item.NameCommercialAccomodation }}</a></th>
+              <th>{{ item.NameCommercialAccomodation }}</th>
+              <th id="copiar{{item.id}}"><a href="http://127.0.0.1:8000/{{ item.url }}">http://127.0.0.1:8000/publi/{{ item.url }}</a></th>
               <th>{{ item.Status }}</th>
               <th>
-                <a href="{% url 'deleteCommercial' item.id %}"><button type="button" class="btn btn-secondary btn-xs"><i
+                <a href="{% url 'DeleteAccomodation' pk item.id %}"><button type="button" class="btn btn-secondary btn-xs"><i
                       class="bi bi-trash"></i></button></a>
                 <button type="button" class="btn btn-warning btn-xs"><i class="bi bi-stop-fill"
                     style="color: red"></i></button></i>
-                    <a href="/home/commercial/{{item.id}}/{{item.CommercialType}}"><button type="button" class="btn btn-info btn-xs"><i class="bi bi-pencil"></i></button></a>
+                    <a href="/campana/{{item.id}}/multimedia"><button type="button" class="btn btn-info btn-xs"><i class="bi bi-pencil"></i></button></a>
                 <button type="button" class="btn btn-primary btn-xs">
                   <i class="bi bi-clipboard" onclick="copy('{{"copiar"}}{{item.id}}')"></i></button>
                   <a href="{% url 'deleteCommercial' item.id %}"><button type="button" class="btn btn-secondary btn-xs"><i

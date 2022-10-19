@@ -69,40 +69,10 @@ class Propietary(models.Model):
 def create_profile(sender, instance, created, **kwargs):
         if created:
             print("-----------Sobreescribiendo método de creación Propietary:....")
-            # print("------Instance:-----", instance.id)
-            # print("------kwargs:-----", kwargs)
-            
-            # propietaryInstance=Propietary.objects.get(id=instance.id)
-            # print(propietaryInstance)
-            # print(propietaryInstance.id)
-            # print(propietaryInstance.BioPropietary)
-
-            # new_id=instance.id
             name=SocialNetworksNames.objects.all()
-            # userInstance=User.objects.get(pk=new_id)
-            # propietaryInstance=Propietary()
-            # propietaryInstance.User=userInstance
-            # print("---------------------")
-            # print(propietaryInstance)
-            # print(userInstance)
-            # print(name)
-            # print("---------------------")
-            # print(propietaryInstance.id)
-            # print(propietaryInstance.User)
             for item in name:
                 print("-------Creando las redes sociales-------------")
                 print(item.id)
-                # new_instance=PropietarySocialNetworks(id=propietaryInstance)
-                # # new_instance.PropietaryModel=PropietarySocialNetworks(id=propietaryInstance)
-                # new_instance.SocialNetworksNames=SocialNetworksNames.objects.get(id=item.id)
-                
-
-            #     new_instance.Prop
-
-    
-                # print(new_instance)
-                # new_instance.save()
-
                 new_instance=PropietarySocialNetworks()
                 new_instance.PropietaryModel=Propietary.objects.get(id=instance.id)
                 new_instance.SocialNetworksName=SocialNetworksNames.objects.get(id=item.id)
@@ -198,7 +168,6 @@ class Accommodation(models.Model):
     AirConditioning=models.BooleanField(null=False, verbose_name='Air Conditionning', default=False)
     Heating=models.BooleanField(null=False, verbose_name='Heating', default=False)
     Wifi=models.BooleanField(null=False, verbose_name='Wifi', default=False)
-    Microwave=models.BooleanField(null=False, verbose_name='Microwave', default=False)
     garage=models.BooleanField(null=False, verbose_name='Garage', default=False)
     Rooms=models.IntegerField(blank=False, null=False,verbose_name='Rooms', default=0)
     SingleBed=models.IntegerField(blank=False, null=False,verbose_name='Single Bed', default=0)

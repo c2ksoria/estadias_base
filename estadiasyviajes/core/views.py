@@ -1,11 +1,11 @@
 from dataclasses import field
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirect
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, TemplateView
 
-from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames
-from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary
+from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames, Accommodation
+from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary, CreateAccommodation
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 
 # CreateView, DetailView, UpdateView, TemplateView, DeleteView
@@ -310,3 +310,118 @@ class updatePlanPropietary(UpdateView):
         context['propietary']= getPropietary(self.request.user).User.username
         print(context)
         return context
+
+class AccomodationCommercialList(ListView):
+    model=Accommodation
+    template_name: 'accommodation_list.html'
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        queryset = super().get_queryset(*args, **kwargs)
+        
+        commercial=Commercial.objects.get(id=user.id)
+        print (commercial)
+        print(queryset)
+        queryset=queryset.filter(CommercialAccommodation= commercial)
+        # print(queryset.User.username)
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        print("------------------get_context_data")
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Datos del Propietario'
+        context['propietary']= getPropietary(self.request.user).User.username
+        propietary=getPropietary(self.request.user)
+        paqueteContratado=propietary.Plan
+        print(paqueteContratado)
+        commercialPayed=Commercial.objects.filter(User=propietary).count()
+        campanaDisponibles=paqueteContratado.CommercialQty-commercialPayed
+        context['campanaDisponibles']= campanaDisponibles
+        context['pk']=self.kwargs['pk']
+        return context
+
+
+class AccommodationCommercialAdd(CreateView):
+    model=Accommodation
+    form_class=CreateAccommodation
+    # success_url=reverse_lazy('commercial')
+    
+    def form_valid(self, form):
+        print("--------------------------------------")
+        user = self.request.user
+        commercialId=self.kwargs['pk']
+        print(commercialId)
+        print("--------------------------------------")
+        propietary=Commercial.objects.get(id=commercialId)
+        print(propietary)
+        print("--------------------------------------")
+
+        # commercial=Commercial.objects.get(User=commercialId)
+        form.instance.CommercialAccommodation = propietary
+        # print(form)
+        self.data_id=commercialId
+        form.save()
+        # current_url = self.request
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Agregar un Aviso'
+        context['propietary']= getPropietary(self.request.user).User.username
+        print(context)
+        commercialId=self.kwargs['pk']
+        context['data_id']=commercialId
+        return context
+    def get_success_url(self):
+        # print("--------------get_success_url------------")
+        # print(self.data_id)
+        # print("--------------------------------------")
+        return reverse('AccomodationCommercialList', kwargs={'pk': self.data_id})
+
+
+class deleteHospedaje(DeleteView):
+    model = Accommodation
+    
+    def get_object(self, queryset=None):
+        print('-----------------deleteHospedaje-----------------------------')
+        # obj = super(Accommodation, self).get_object()
+        # print(obj)
+        print(self.kwargs)
+        # print(self.kwargs['id_hospedaje'], self.kwargs['pk1'])
+        Id=self.kwargs['id_hospedaje']
+        # object_instance = Accommodation.objects.filter(id=Id)
+
+        
+        return self.get_queryset().filter(pk=Id).get()
+        
+
+    def get_success_url(self, *args, **kwargs):
+        # Assuming there is a ForeignKey from Comment to Post in your model
+        print("-----------_get_success_url-------")
+        # post = self.object.post
+        # print(post)
+        pk1=self.kwargs['pk1']
+
+        return reverse_lazy('AccomodationCommercialList', kwargs={'pk': pk1})
+
+
+
+
+
+    def get_context_data(self, *args, **kwargs):
+        print('-------get_context_data---------')
+        context = super().get_context_data(**kwargs)
+        for item in context:
+            print(item)
+        print(type(context['accommodation']))
+        Id=self.kwargs['id_hospedaje']
+        pk1=self.kwargs['pk1']
+        context['pk1']=pk1
+        context['id_hospedaje']=Id
+
+        print(Id, pk1)
+        return context
+
+def test(request,pk1,pk2):
+    
+    print(pk1, pk2)
+    return reverse_lazy(AccomodationCommercialList, kwargs={'pk': 1})
