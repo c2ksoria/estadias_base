@@ -328,7 +328,7 @@ class AccomodationCommercialList(ListView):
     def get_context_data(self, **kwargs):
         print("------------------get_context_data")
         context = super().get_context_data(**kwargs)
-        context['titulo'] = 'Datos del Propietario'
+        context['titulo'] = 'Listado de Hospedajes'
         context['propietary']= getPropietary(self.request.user).User.username
         propietary=getPropietary(self.request.user)
         paqueteContratado=propietary.Plan
@@ -375,17 +375,19 @@ class AccommodationCommercialAdd(CreateView):
         # print("--------------get_success_url------------")
         # print(self.data_id)
         # print("--------------------------------------")
+
+        
         return reverse('AccomodationCommercialList', kwargs={'pk': self.data_id})
 
 
-class deleteHospedaje(DeleteView):
+class deleteAccommodation(DeleteView):
     model = Accommodation
     
     def get_object(self, queryset=None):
-        print('-----------------deleteHospedaje-----------------------------')
+        print('-----------------deleteAccommodation-----------------------------')
         # obj = super(Accommodation, self).get_object()
         # print(obj)
-        print(self.kwargs)
+        # print(self.kwargs)
         # print(self.kwargs['id_hospedaje'], self.kwargs['pk1'])
         Id=self.kwargs['id_hospedaje']
         # object_instance = Accommodation.objects.filter(id=Id)
@@ -412,13 +414,13 @@ class deleteHospedaje(DeleteView):
         context = super().get_context_data(**kwargs)
         for item in context:
             print(item)
-        print(type(context['accommodation']))
+        # print(type(context['accommodation']))
         Id=self.kwargs['id_hospedaje']
         pk1=self.kwargs['pk1']
         context['pk1']=pk1
         context['id_hospedaje']=Id
 
-        print(Id, pk1)
+        # print(Id, pk1)
         return context
 
 def test(request,pk1,pk2):
