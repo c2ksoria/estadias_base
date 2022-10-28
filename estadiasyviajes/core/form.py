@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelForm
-from .models import Commercial, CommercialPictures, Propietary, PropietarySocialNetworks, Accommodation
+from .models import Commercial, CommercialPictures, Propietary, PropietarySocialNetworks, Accommodation, AccomodationPictures
 
 # class CreateFormCampana(ModelForm):
 #     def __init__(self, *args, **kwargs):
@@ -170,10 +170,28 @@ class CreateAccommodation(ModelForm):
              'Rooms':'Habitaciones',
              'SingleBed':'Camas Simples',
              'DoubleBed':'Camas Dobles',
-             'Crockery':'Valijja',
+             'Crockery':'Vajilla',
              'CheckInTimeFrom':'Checkin desde',
              'CheckInTimeTo':'Checkin hasta',
              'CheckOutTimeFrom':'Checkout desde',
              'CheckOutTimeTo':'Checkout hasta',
 
+         }
+
+
+class CreatePictureAccomodation(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class']="form-control"
+    
+    class Meta:
+        model = AccomodationPictures
+        fields='__all__'
+        exclude=('Accommodation',)
+        labels = {
+             'Image': 'Imagen',
+             'Accommodation' : 'Hospedaje',
+             'ResumeTextImage': 'Resumen de Imagen',
+             'SubIndex': 'SubÍndice'
          }

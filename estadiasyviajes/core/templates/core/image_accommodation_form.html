@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block name %}
-    <a href="{% url 'propietary' %}" class="d-block">{{empresa}}</a>
+    <a href="{% url 'propietary' %}" class="d-block">{{propietary}}</a>
 {% endblock %}
 
 
@@ -18,7 +18,7 @@
           <h1 class="m-0">{{ titulo }}</h1>
 
           {% endif %}
-          <a href="{% url 'AccomodationCommercialList' data_id %}"><button>Volver</button></a>
+          
         </div><!-- /.col -->
         <div class="col-sm-4 justify-content-end">
           <!--  -->
@@ -39,9 +39,26 @@
     <div class="container-fluid">
       <!-- <h2>Holass1 </h2>
         <h1>{{ empresa}}</h1> -->
+        <h1>Imágenes</h1>
+        <div class="col-3">
+        {% if images %}
+            {% for image in images %}
+              <img alt="" src ="{{ image.Image.url }}" style="max-height:100px">
+              
+              <br>
+
+              <h4> {{image.ResumeTextImage}}</h4>
+            {% endfor %}
+        {% else %}
+            <h2>No hay imágenes aún</h2>
+        {% endif %}
 
 
-      <form action="{% if update %}{% url 'AccommodationUpdate' data_id %} {% else %} {% url 'AccommodationCommercialAdd' data_id %}{% endif %}"  method="POST">
+        
+
+      </div>
+      <h1>Agregar Nueva Imágen</h1>
+      <form action="{% url 'test' pk %}"  method="POST" enctype="multipart/form-data">
         {% if form.errors %}
 
         {{ form.errors }}
@@ -53,7 +70,7 @@
           {{ item.label }}  
           <br>
           {{ item }}
-          {% endfor %}
+        {% endfor %}
         
 
         <div class="row">

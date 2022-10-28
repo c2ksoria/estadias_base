@@ -2,8 +2,8 @@ from dataclasses import field
 from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirect
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, TemplateView
 
-from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames, Accommodation
-from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary, CreateAccommodation
+from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames, Accommodation, AccomodationPictures
+from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary, CreateAccommodation, CreatePictureAccomodation
 
 from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
@@ -196,6 +196,7 @@ def updateCommercial(request, pk):
     Face_formset=SocialFormSet(instance=PropietaryModel)
     # print(Face_formset)
     # name=SocialNetworksNames.objects.all()
+    
     if request.method == "POST":
         print("---------UpdateCommercial --->>>> POST ----------")
         # datos=request.POST
@@ -214,6 +215,7 @@ def updateCommercial(request, pk):
             # return redirect('/home/commercial')
             
     context={'propietaryForm': propietaryForm, 'Face_formset': Face_formset}
+    context['propietary']= getPropietary(request.user).User.username
     # print (context)
     return render(request, 'core/updateCommercial.html', context)
 
@@ -321,14 +323,17 @@ class AccomodationCommercialList(ListView):
         commercial=Commercial.objects.get(id=user.id)
         print (commercial)
         print(queryset)
-        queryset=queryset.filter(CommercialAccommodation= commercial)
+        self.commercial= commercial
+        pk=self.kwargs['pk']
+        queryset=queryset.filter(CommercialAccommodation= pk)
         # print(queryset.User.username)
         return queryset
     
     def get_context_data(self, **kwargs):
         print("------------------get_context_data")
         context = super().get_context_data(**kwargs)
-        context['titulo'] = 'Listado de Hospedajes'
+        commercial_1=Commercial.objects.get(id=self.kwargs['pk'])
+        context['titulo'] = 'Listado de Hospedajes de '+ " " + commercial_1.CommercialName
         context['propietary']= getPropietary(self.request.user).User.username
         propietary=getPropietary(self.request.user)
         paqueteContratado=propietary.Plan
@@ -337,6 +342,7 @@ class AccomodationCommercialList(ListView):
         campanaDisponibles=paqueteContratado.CommercialQty-commercialPayed
         context['campanaDisponibles']= campanaDisponibles
         context['pk']=self.kwargs['pk']
+        
         return context
 
 
@@ -422,6 +428,87 @@ class deleteAccommodation(DeleteView):
 
         # print(Id, pk1)
         return context
+
+class AccommodationUpdate(UpdateView):
+    model=Accommodation
+    form_class = CreateAccommodation
+    # success_url ="/home/commercial"
+    def form_valid(self, form):
+        print("--------------------------------------")
+        user = self.request.user
+        commercialId=self.kwargs['pk']
+        print(commercialId)
+        print("--------------------------------------")
+        propietary=Accommodation.objects.get(id=commercialId)
+        print(propietary.NameCommercialAccomodation, propietary.CommercialAccommodation)
+        print("--------------------------------------")
+
+        # commercial=Commercial.objects.get(User=commercialId)
+        form.instance.CommercialAccommodation = propietary.CommercialAccommodation
+        # print(form)
+        self.data_id=commercialId
+        form.save()
+        # current_url = self.request
+        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Editar Datos de Hospedaje'
+        commercialId=self.kwargs['pk']
+        context['data_id']=commercialId
+        context['update']= True
+        # print(context)
+        return context
+    def get_success_url(self):
+        # print("--------------get_success_url------------")
+        # print(self.data_id)
+        # print("--------------------------------------")
+
+        # Aquí hay que arreglar el reverso para que vuelva a la pantalla que corresponde
+        return reverse('AccomodationCommercialList', kwargs={'pk': self.data_id})
+
+
+def AccomodationPicturesView(request, pk):
+    print("---------AccomodationPicturesView----------")
+    print("Slug: ",pk)
+    
+    # images= AccomodationPictures.objects.get(id=pk)
+    
+    print("----------------------AccommodatioId----------------------")
+    AccommodationId= Accommodation.objects.get(id=pk)
+    print(AccommodationId)
+    images= AccomodationPictures.objects.filter(Accommodation=AccommodationId)
+    form = CreatePictureAccomodation(initial={'Accommodation':AccommodationId})
+    
+    # form.initial.Accommodation=AccommodationId
+    print("-----------------Form------------")
+    print(form)
+    # for item in images:
+    #     print(item.Image)
+
+    context={'form': form}
+    context['images']= images
+    context['pk']=pk
+    context['propietary']= getPropietary(request.user).User.username
+    print(getPropietary(request.user).User.username)
+
+    if request.method == "POST":
+        # print(request.POST)
+        form = CreatePictureAccomodation(request.POST, request.FILES)
+        form.instance.Accommodation=AccommodationId
+        print("-----------------Form from POST!! ------------")
+        print(form)
+
+        if form.is_valid():
+            print("------Form is valid!!!")
+            form.save()            
+            render(request, 'core/image_accommodation_form.html', context)
+            
+        else:
+            print("Error!")
+    
+    return render(request, 'core/image_accommodation_form.html', context)
+
+    
 
 def test(request,pk1,pk2):
     

@@ -56,7 +56,7 @@
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Tipo</th>
+
               <th>Url</th>
               <th>Estado</th>
               <th>Acciones</th>
@@ -65,8 +65,7 @@
           <tbody>
             {% for item in object_list%}
             <tr>
-              <th><a href="{% url 'updateCommercial' item.id %}">{{ item.NameCommercialAccomodation }}</a></th>
-              <th>{{ item.NameCommercialAccomodation }}</th>
+              <th><a href="{% url 'AccommodationUpdate' item.id %}">{{ item.NameCommercialAccomodation }}</a></th>
               <th id="copiar{{item.id}}"><a href="http://127.0.0.1:8000/{{ item.url }}">http://127.0.0.1:8000/publi/{{ item.url }}</a></th>
               <th>{{ item.Status }}</th>
               <th>

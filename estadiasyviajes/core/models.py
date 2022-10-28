@@ -172,13 +172,13 @@ class Accommodation(models.Model):
     Rooms=models.IntegerField(blank=False, null=False,verbose_name='Rooms', default=0)
     SingleBed=models.IntegerField(blank=False, null=False,verbose_name='Single Bed', default=0)
     DoubleBed=models.IntegerField(blank=False, null=False,verbose_name='Double Bed', default=0)
-    Crockery=models.IntegerField(blank=False, null=False,verbose_name='Crockery', default=0)
+    Crockery=models.BooleanField(blank=False, null=False,verbose_name='Crockery', default=0)
     CheckInTimeFrom=models.TimeField(null=False, default=calculo, verbose_name="Check In time from")
     CheckInTimeTo=models.TimeField(null=False, default=calculo, verbose_name="Check In time to")
     CheckOutTimeFrom=models.TimeField(null=False, default=calculo, verbose_name="Check Out time from")
     CheckOutTimeTo=models.TimeField(null=False, default=calculo, verbose_name="Check Out time to")
     def __str__(self):
-        return self.NameCommercialAccomodation + " - " + self.CommercialAccommodation.CommercialName
+        return self.NameCommercialAccomodation
 
     # class Meta:
     #     verbose_name_plural = 'Province Pictures'
@@ -217,7 +217,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             # email=self.normalize_email(email),
         )
-        print("------------USer Created-------")
+        print("------------User Created-------")
         # user.set_password(password)
         user.save(using=self._db)
         return user
