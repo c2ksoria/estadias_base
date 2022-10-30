@@ -154,9 +154,11 @@ def AddCommercial(request):
     
     if request.method == "POST":
         # print(request.POST)
-        form=CreateFormCommercial(request.POST, instance=propietary)
+        form=CreateFormCommercial(request.POST)
+        form.instance.User=propietary
         print(form)
         if form.is_valid():
+            print("---------El formulario es válido----------")
             form.save()
             return redirect('/home/commercial')
         else:

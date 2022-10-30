@@ -1,13 +1,55 @@
 {% extends 'base.html' %}
+{% load leaflet_tags %}
+
+
+<style>
+
+  .leaflet-container {  /* all maps */
+      width:  600px;
+      height: 400px;
+  }
+
+  #specialbigmap {
+      height: 800px;
+  }
+
+  /* Resize the "display_raw" textbox */
+  .django-leaflet-raw-textarea {
+      width: 100%;
+  }
+
+</style>
+
+
+
 
 {% block name %}
-  <a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
+<a href="{% url 'propietary' %}" class="d-block">{{ propietary }}</a>
 {% endblock %}
 
 
-{% block wrapper %}
 
+{% block wrapper %}
+<script>
+  function map_init_basic (map, options) {
+  
+  var marker = L.marker([50.5, 30.5], {draggable:'true'}).addTo(map);
+  marker.on('drag', function (e) {
+                console.log('marker drag event');
+            });
+            marker.on('dragend', function (e) {
+                console.log('marker dragend event');
+                console.log(e.target._latlng)
+                var lat = e.target._latlng.lat
+                var lng = e.target._latlng.lng
+
+                document.getElementById('id_lat').value = parseFloat(lat).toFixed(6);
+                document.getElementById('id_lng').value = parseFloat(lng).toFixed(6);
+            });
+};
+</script>
 <!-- Content Wrapper. Contains page content -->
+{% leaflet_map "yourmap" callback="window.map_init_basic" %}
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
@@ -37,85 +79,48 @@
 
   <div class="content">
     <div class="container-fluid">
-      <!-- <h2>Holass1 </h2>
-        <h1>{{ empresa}}</h1> -->
-
-
-      
-
       <form action="{% url 'addcommercial' %}" method="POST" enctype="multipart/form-data">
         {% if form.errors %}
-
+        
         {{ form.errors }}
-
+        
         {% endif %}
         {% csrf_token %}
-        <div class="input-group mb-3">
-          {{ form.User.label}}
-          {{ form.User}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.Status.label}}
-          {{ form.Status}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.CommercialName.label}}
-          {{ form.CommercialName}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.CommercialAdress.label}}
-          {{ form.CommercialAdress}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.ResumeText.label}}
-          {{ form.ResumeText}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.Province.label}}
-          {{ form.Province}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.lat.label}} <hr>   {{ form.lat}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.lng.label}}
-          {{ form.lng}}
-        </div>
 
+        {% for item in form %}
         <div class="input-group mb-3">
-          {{ form.phone_number.label}}
-          {{ form.phone_number}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.CommercialEmail.label}}
-          {{ form.CommercialEmail}}
-        </div>
-        <div class="input-group mb-3">
-          {{ form.CommercialType.label}}
-          {{ form.CommercialType}}
-        </div>
-
-        
-
-        
-        <div class="row">
-        
-          <!-- /.col -->
-          <div class="col-3">
-            <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+          {{ item.label}}
+          {{ item}}
           </div>
-          <!-- /.col -->
-        </div>
-    </div>
-  </div>
 
-</div>
-</form>
+        {% endfor %}
+          
+                              
+                              
+                              
+                              
+                              <div class="row">
+                                
+                                <!-- /.col -->
+                                <div class="col-3">
+                                  <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+                                  </div>
+                                  <!-- /.col -->
+                                  </div>
+                                  
+                                  </div>
+                                  </div>
+                                  
+                                  </div>
+                                  </form>
+                                  
+
+                                  
 
 
 
-
-
+{% leaflet_js %}
+{% leaflet_css %}
 
 
 

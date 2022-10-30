@@ -33,6 +33,8 @@ class CreateFormCommercial(ModelForm):
             'CommercialAdress': forms.TextInput(attrs={'placeholder': 'Dirección Física Real'}),
             'CommercialEmail': forms.TextInput(attrs={'placeholder': 'Dirección Física Real'}),
             'ResumeText': forms.Textarea(attrs={'rows': 3}),
+            # 'lat': forms.NumberInput(),
+            # 'lng': forms.NumberInput(),
         }
         labels = {
             'CommercialName': 'Nombre Comercial',

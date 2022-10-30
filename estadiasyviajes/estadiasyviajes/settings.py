@@ -31,6 +31,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# LEAFLET_CONFIG = {
+#     'TILES': 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+#     # 'SPATIAL_EXTENT': (5.0, 44.0, 7.5, 46),
+#     # 'DEFAULT_CENTER': (6.0, 45.0),
+#     # 'DEFAULT_ZOOM': 16,
+#     # 'MIN_ZOOM': 3,
+#     # 'MAX_ZOOM': 18,
+#     # 'DEFAULT_PRECISION': 6,
+#     'MINIMAP': False,
+#     'RESET_VIEW': False
+# }
 
 # Application definition
 
@@ -43,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'members',
+    'leaflet',
     'phonenumber_field',
 ]
 
@@ -136,3 +148,4 @@ LOGOUT_REDIRECT_URL = 'home1'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'core/static'),
 )
+
