@@ -54,13 +54,13 @@ class Province(models.Model):
         return self.ProvinceName
 
 class Propietary(models.Model):
-    User=models.OneToOneField(User,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
+    Member=models.OneToOneField(User,on_delete=models.SET_NULL, max_length=50,null=True,verbose_name='User' )
     Status=models.ForeignKey(Status, on_delete=models.SET_NULL,null=True,verbose_name='Status')
     Plan=models.ForeignKey(Plan, on_delete=models.SET_NULL,null=True,verbose_name='Plan')
     Image= models.ImageField(upload_to='images/', null=True, blank=True)
     BioPropietary=models.CharField(max_length=140, null=False, verbose_name='Biography', default="Sin Biografía por defecto")
     def __str__(self):
-        return self.User.username
+        return self.Member.username
     
     class Meta:
         verbose_name_plural = 'Propietaries'

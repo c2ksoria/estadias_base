@@ -45,7 +45,7 @@
           Información de Usuario
         </h2>
 
-      <form action="." method="POST">
+      <form action="." method="POST" enctype="multipart/form-data" >
         {% if form.errors %}
 
         {{ form.errors }}
@@ -53,20 +53,14 @@
         {% endif %}
         {% csrf_token %}
         <div class="row">
-          {% for form in propietaryForm %}
-           
-
-                {{form.label}}
-                <br>
-                {{form}}
-          {% endfor%}
+            {{ form }}
         </div>
         
         <h2>
           Información de Redes Sociales
         </h2>
 
-        <div class="row">
+        <!-- <div class="row">
           {% for form in Formset %}
            
 
@@ -75,7 +69,7 @@
           {{form}}
         {% endfor%}
           <br>
-        </div>
+        </div> -->
         <div class="row">
         
           <!-- /.col -->

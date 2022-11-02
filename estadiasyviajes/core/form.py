@@ -85,14 +85,12 @@ class CreateFormPropietary(ModelForm):
         fields='__all__'
         exclude = ('Status',)
         widgets = {
-
             'BioPropietary': forms.Textarea(attrs={'rows': 3}),
- 
+            
         }
         labels = {
-            'Nombre': 'Estado',
+            'Member': 'Usuario',
             'Plan' : 'Plan',
-            'User': 'Usuario',
             'Image': 'Imagen',
             'BioPropietary': 'Bio'
         }

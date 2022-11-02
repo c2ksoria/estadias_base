@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirec
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, TemplateView
 
 from core.models import Commercial, Plan, Propietary, CommercialPictures, Status, PropietarySocialNetworks, SocialNetworksNames, Accommodation, AccomodationPictures
-from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary, CreateAccommodation, CreatePictureAccomodation
+from core.form import AddImageCommercialForm, CreateFormCommercial, UpdateFormPropietary, UpdatePropietarySocialNetworks, updateFormPlanPropietary, CreateAccommodation, CreatePictureAccomodation, CreateFormPropietary
 
 from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
@@ -22,14 +22,14 @@ class PropietaryView(ListView):
         user = self.request.user
         queryset = super().get_queryset(*args, **kwargs)
         print(queryset)
-        queryset=queryset.filter(User=user)
+        queryset=queryset.filter(Member=user)
         # print(queryset.User.username)
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titulo'] = 'Datos del Propietario'
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         print(context)
         return context
     
@@ -40,7 +40,7 @@ class PlanView(ListView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         propietary=getPropietary(self.request.user)
-        context['propietary']= propietary.User.username
+        context['propietary']= propietary.Member.username
         context['id_propietary']= propietary
 
         planContratado=propietary.Plan
@@ -55,7 +55,7 @@ class CommercialView(ListView):
      def get_queryset(self, *args, **kwargs):
          user = self.request.user
          queryset = super().get_queryset(*args, **kwargs)
-         propietary_name=Propietary.objects.get(User=user.id)
+         propietary_name=Propietary.objects.get(Member=user.id)
          queryset = queryset.filter(User=propietary_name.id)
          return queryset
    
@@ -63,7 +63,7 @@ class CommercialView(ListView):
          context = super().get_context_data(**kwargs)
          context['titulo'] = 'Comercios Activos'
          propietary=getPropietary(self.request.user)
-         context['propietary']= propietary.User.username
+         context['propietary']= propietary.Member.username
          print("------------------get_context_data")
          paqueteContratado=propietary.Plan
          print(paqueteContratado)
@@ -167,7 +167,7 @@ def AddCommercial(request):
             return redirect('/home/commercial')
             
     context={'form':form}
-    context['propietary']= getPropietary(request.user).User.username
+    context['propietary']= getPropietary(request.user).Member.username
     return render(request, 'core/createCommercial.html', context)
 
 def updateCommercial(request, pk):
@@ -185,7 +185,7 @@ def updateCommercial(request, pk):
     #         return redirect('/home/commercial')
             
     # context={'form':form}
-    # context['propietary']= getPropietary(request.user).User.username
+    # context['propietary']= getPropietary(request.user).Member.username
     # return render(request, 'core/createCommercial.html', context)
     SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks,UpdatePropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0, can_delete = False)
     PropietaryModel= Propietary.objects.get(id=request.user.id)
@@ -217,7 +217,7 @@ def updateCommercial(request, pk):
             # return redirect('/home/commercial')
             
     context={'propietaryForm': propietaryForm, 'Face_formset': Face_formset}
-    context['propietary']= getPropietary(request.user).User.username
+    context['propietary']= getPropietary(request.user).Member.username
     # print (context)
     return render(request, 'core/updateCommercial.html', context)
 
@@ -229,36 +229,32 @@ class deleteCommercial(DeleteView):
         # user = self.request.user
         # empresa_nombre=Propietary.objects.get(User=user.id)
         
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         return context
 
 
 def getPropietary(user):
-    propietaryName=Propietary.objects.get(User=user.id)
+    propietaryName=Propietary.objects.get(Member=user.id)
     return propietaryName
+
 
 def updatePropietary(request, pk):
     print("---------UpdatePropietary----------")
-    print("Slug: ",pk)
-    SocialFormSet=inlineformset_factory(Propietary, PropietarySocialNetworks,UpdatePropietarySocialNetworks, fields={'PropietaryModel', 'SocialNetworksName', 'LinkSocialetwork'} , extra=0, can_delete = False)
-    PropietaryModel= Propietary.objects.get(id=pk)
-    propietary= Propietary.objects.get(id=pk)
-    propietaryForm=UpdateFormPropietary(instance=propietary)
-    Formset=SocialFormSet( instance=PropietaryModel)
-
+    propietaryData=Propietary.objects.get(id=pk)
+    form = CreateFormPropietary(instance=propietaryData)
+    
     if request.method == "POST":
-        Formset=SocialFormSet(request.POST, instance=PropietaryModel)
-        propietaryForm=UpdateFormPropietary(request.POST,instance=propietary)
-        # form=UpdateFormPropietary(request.POST, instance=propietary)
-        if Formset.is_valid() and propietaryForm.is_valid():
-            Formset.save()
-            propietaryForm.save()
-            # context=super(updatePropietary).save()
-            context={'saved': 'True'}
-            return redirect('/home/propietary')
+        form = CreateFormPropietary(request.POST, request.FILES, instance=propietaryData)
+        for item in form:
+            print(form)
+        
+        if form.is_valid():
+            form.save()
             
-    context={'propietaryForm': propietaryForm, 'Formset': Formset}
-    context['propietary']= getPropietary(request.user).User.username
+            return redirect('/home/propietary')
+    
+    context={'form': form}
+    context['propietary']= getPropietary(request.user).Member.username
 
     return render(request, 'core/propietary_form.html', context)
 
@@ -297,7 +293,7 @@ class testUpdate(TemplateView):
     def get_context_data(self, **kwargs):
         context=super(testUpdate,self).get_context_data(**kwargs)
         print("holasss")
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         print(context)
         return context
 
@@ -311,7 +307,7 @@ class updatePlanPropietary(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(updatePlanPropietary,self).get_context_data(**kwargs)
         context['titulo'] = 'Seleccionar el nuevo plan'
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         print(context)
         return context
 
@@ -336,7 +332,7 @@ class AccomodationCommercialList(ListView):
         context = super().get_context_data(**kwargs)
         commercial_1=Commercial.objects.get(id=self.kwargs['pk'])
         context['titulo'] = 'Listado de Hospedajes de '+ " " + commercial_1.CommercialName
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         propietary=getPropietary(self.request.user)
         paqueteContratado=propietary.Plan
         print(paqueteContratado)
@@ -374,7 +370,7 @@ class AccommodationCommercialAdd(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titulo'] = 'Agregar un Aviso'
-        context['propietary']= getPropietary(self.request.user).User.username
+        context['propietary']= getPropietary(self.request.user).Member.username
         print(context)
         commercialId=self.kwargs['pk']
         context['data_id']=commercialId
@@ -490,7 +486,7 @@ def AccomodationPicturesView(request, pk):
     context={'form': form}
     context['images']= images
     context['pk']=pk
-    context['propietary']= getPropietary(request.user).User.username
+    context['propietary']= getPropietary(request.user).Member.username
     print(getPropietary(request.user).User.username)
 
     if request.method == "POST":
