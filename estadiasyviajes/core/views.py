@@ -343,6 +343,25 @@ class AccomodationCommercialList(ListView):
         
         return context
 
+def newCommercialAccommodationList(request, pk):
+    print("-------------PK---------",pk)
+    propietary=getPropietary(request.user)
+    paqueteContratado=propietary.Plan
+    commercial=Commercial.objects.filter(User=propietary)
+    commercialUsed=0
+    # en commercialUser sumar los demás tipos de comercios; tales como gastronomía
+    for item in commercial:
+        commercialUsed+=Accommodation.objects.filter(CommercialAccommodation=item).count()
+    adsAviables=paqueteContratado.AdviceQty-commercialUsed
+    CommercialAccommodationId=Commercial.objects.get(id=pk)
+    object_list=Accommodation.objects.filter(CommercialAccommodation=CommercialAccommodationId)
+    context={'listado':object_list}
+    context['pk']=pk
+    context['titulo'] = 'Listado de Hospedajes de '+ " " + CommercialAccommodationId.CommercialName
+    context['propietary']= propietary.Member.username
+
+    context['adsAviables']= adsAviables
+    return render(request, 'core/accommodation_list.html', context)
 
 class AccommodationCommercialAdd(CreateView):
     model=Accommodation
@@ -427,42 +446,91 @@ class deleteAccommodation(DeleteView):
         # print(Id, pk1)
         return context
 
+def newUpdateAccommodation(request, pk, pk1):
+    print('primary key:',pk, 'primary key1',pk1)
+    CommercialId= Commercial.objects.get(id=pk)
+    print (CommercialId)
+    AccomodationData= Accommodation.objects.get(id=pk1)
+    # print(AccomodationData)
+    form=CreateAccommodation(instance=AccomodationData)
+    print("-------------------FORM--------------")
+    # print(form)
+    print("-------------------END FORM--------------")
+    
+    if request.method == "POST":
+        form=CreateAccommodation(request.POST, instance=AccomodationData)
+        # form.instance.CommercialAccommodation=CommercialId
+        
+        print("-------------------FORM--------------")
+        print(form)
+        print("-------------------END FORM--------------")
+        if form.is_valid():
+            print("----------ES VÁLIDO--------")
+            accomodationUpdate=form.save()
+            accomodationUpdate.save()
+            print("----------GRABADOO--------")
+            return redirect('/home/commercial')
+        else:
+            print("--------------Error-----------")
+            return redirect('/home/commercial')
+    context={'form': form}
+    context['pk']=pk
+    context['pk1']=pk1
+    context['update']= True
+
+    return render(request,'core/accommodation_form.html',context)
+
 class AccommodationUpdate(UpdateView):
+    template_name: 'core/accommodation_form.html'
     model=Accommodation
     form_class = CreateAccommodation
-    # success_url ="/home/commercial"
-    def form_valid(self, form):
-        print("--------------------------------------")
-        user = self.request.user
-        commercialId=self.kwargs['pk']
-        print(commercialId)
-        print("--------------------------------------")
-        propietary=Accommodation.objects.get(id=commercialId)
-        print(propietary.NameCommercialAccomodation, propietary.CommercialAccommodation)
-        print("--------------------------------------")
+    # success_url = 'home/propietary'
+    # def get_queryset(self, *args, **kwargs):
+    #     print("------------get_queryset--------")
+    #     queryset = super(AccommodationUpdate, self).get_queryset()
+    #     filtro=queryset.filter(id=self.kwargs['pk'])
+    #     print("filtro: ", filtro)
+    #     return filtro
 
-        # commercial=Commercial.objects.get(User=commercialId)
-        form.instance.CommercialAccommodation = propietary.CommercialAccommodation
-        # print(form)
-        self.data_id=commercialId
-        form.save()
-        # current_url = self.request
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        print("----------get--------")
+        print(self.kwargs['pk'],self.kwargs['pk1'])
+        self.object = self.get_object()
+        # print(self.object)
+        return super().get(request, *args, **kwargs)
+
+    # def form_valid(self, form):
+    #     print("----------------AccommodationUpdate----------------------")
+    #     user = self.request.user
+    #     commercialId=self.kwargs['pk']
+    #     print(commercialId)
+    #     print("--------------------------------------")
+    #     propietary=Accommodation.objects.get(id=commercialId)
+    #     print(propietary.NameCommercialAccomodation, propietary.CommercialAccommodation)
+    #     print("--------------------------------------")
+
+    #     # commercial=Commercial.objects.get(User=commercialId)
+    #     form.instance.CommercialAccommodation = propietary.CommercialAccommodation
+    #     # print(form)
+    #     self.data_id=commercialId
+    #     form.save()
+    #     # current_url = self.request
+    #     return super().form_valid(form)
     def get_context_data(self, **kwargs):
+        print("-----------get_context_data----------")
         context = super().get_context_data(**kwargs)
         context['titulo'] = 'Editar Datos de Hospedaje'
-        commercialId=self.kwargs['pk']
-        context['data_id']=commercialId
+        commercialId=self.kwargs['pk1']
+        context['pk1']=commercialId
+        context['pk']=self.kwargs['pk']
         context['update']= True
         # print(context)
         return context
-    def get_success_url(self):
-        # print("--------------get_success_url------------")
-        # print(self.data_id)
-        # print("--------------------------------------")
-
-        # Aquí hay que arreglar el reverso para que vuelva a la pantalla que corresponde
-        return reverse('AccomodationCommercialList', kwargs={'pk': self.data_id})
+    # def get_success_url(self):
+    #     # print("--------------get_success_url------------")
+    #     # print(self.data_id)
+    #     # print("--------------------------------------"           # Aquí hay que arreglar el reverso para que vuelva a la pantalla que corresponde
+    #     return reverse('AccomodationCommercialList', kwargs={'pk': 27})
 
 
 def AccomodationPicturesView(request, pk):

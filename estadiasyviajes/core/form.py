@@ -159,7 +159,7 @@ class CreateAccommodation(ModelForm):
         # widgets = {
         #     'SocialNetworksName':  forms.Select(attrs={'disabled': 'True'}),
         # }
-        exclude={'CommercialAccommodation'}
+        # exclude={'CommercialAccommodation'}
         labels = {
              'NameCommercialAccomodation': 'Nombre',
              'Microwave' : 'Microondas',

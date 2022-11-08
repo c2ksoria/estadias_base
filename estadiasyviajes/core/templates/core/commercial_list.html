@@ -74,7 +74,7 @@
                       class="bi bi-trash"></i></button></a>
                 <button type="button" class="btn btn-warning btn-xs"><i class="bi bi-stop-fill"
                     style="color: red"></i></button></i>
-                    <a href="/home/commercial/{{item.id}}/{{item.CommercialType}}"><button type="button" class="btn btn-info btn-xs"><i class="bi bi-pencil"></i></button></a>
+                    <a href="{% url 'newCommercialAccommodationList' item.id %}"><button type="button" class="btn btn-info btn-xs"><i class="bi bi-pencil"></i></button></a>
                 <button type="button" class="btn btn-primary btn-xs">
                   <i class="bi bi-clipboard" onclick="copy('{{"copiar"}}{{item.id}}')"></i></button>
                   <a href="{% url 'deleteCommercial' item.id %}"><button type="button" class="btn btn-secondary btn-xs"><i

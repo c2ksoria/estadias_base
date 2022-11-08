@@ -19,14 +19,13 @@
           <h1 class="m-0">{{ titulo }}</h1>
 
           {% endif %}
-          {% if campanaDisponibles > 0 %}
+          {% if adsAviables > 0 %}
 
           <a href="{% url 'AccommodationCommercialAdd' pk %}"><button class="btn btn-primary">Crear Nuevo Hospedaje</button></a>
-          <a><p>Quedan {{campanaDisponibles}} Hospedajes disponibles</p>
-            
-          </a>
+          <a><p>Puedes Agregar {{adsAviables}} avisos de tipo "Hospedaje"</p></a>
+
           {% else %}
-          <a href="/home/plan">Ya no puedes crear más comercios; favor de subir de Plan...</a>
+          <a href="/home/plan">Ya no puedes crear más avisos; favor de subir de Plan...</a>
           {% endif %}
 
         </div><!-- /.col -->
@@ -51,7 +50,7 @@
         <h1>{{ empresa}}</h1> -->
 
       <div>
-        {% if object_list %}
+        {% if listado %}
         <table class="table">
           <thead>
             <tr>
@@ -63,9 +62,9 @@
             </tr>
           </thead>
           <tbody>
-            {% for item in object_list%}
+            {% for item in listado%}
             <tr>
-              <th><a href="{% url 'AccommodationUpdate' item.id %}">{{ item.NameCommercialAccomodation }}</a></th>
+              <th><a href="{% url 'newUpdateAccommodation' pk item.id %}">{{ item.NameCommercialAccomodation }}</a></th>
               <th id="copiar{{item.id}}"><a href="http://127.0.0.1:8000/{{ item.url }}">http://127.0.0.1:8000/publi/{{ item.url }}</a></th>
               <th>{{ item.Status }}</th>
               <th>

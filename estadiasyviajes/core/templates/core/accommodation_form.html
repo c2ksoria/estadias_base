@@ -18,7 +18,7 @@
           <h1 class="m-0">{{ titulo }}</h1>
 
           {% endif %}
-          <a href="{% url 'AccomodationCommercialList' data_id %}"><button>Volver</button></a>
+          
         </div><!-- /.col -->
         <div class="col-sm-4 justify-content-end">
           <!--  -->
@@ -41,7 +41,7 @@
         <h1>{{ empresa}}</h1> -->
 
 
-      <form action="{% if update %}{% url 'AccommodationUpdate' data_id %} {% else %} {% url 'AccommodationCommercialAdd' data_id %}{% endif %}"  method="POST">
+      <form action="{% url 'newUpdateAccommodation' pk  pk1 %}"  method="POST">
         {% if form.errors %}
 
         {{ form.errors }}
@@ -60,7 +60,7 @@
         
           <!-- /.col -->
           <div class="col-3">
-            <button type="submit" class="btn btn-primary btn-block" value="save">Guardar</button>
+            <button type="submit" class="btn btn-primary btn-block" value="submit">Guardar</button>
           </div>
           <!-- /.col -->
         </div>
