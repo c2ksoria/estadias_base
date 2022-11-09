@@ -41,7 +41,8 @@
         <h1>{{ empresa}}</h1> -->
 
 
-      <form action="{% url 'newUpdateAccommodation' pk  pk1 %}"  method="POST">
+      
+      <form action="{% if update %}{% url 'newUpdateAccommodation' pk pk1 %} {% else %} {% url 'AccommodationCommercialAdd' data_id %}{% endif %}"  method="POST">
         {% if form.errors %}
 
         {{ form.errors }}

@@ -399,8 +399,8 @@ class AccommodationCommercialAdd(CreateView):
         # print(self.data_id)
         # print("--------------------------------------")
 
-        
-        return reverse('AccomodationCommercialList', kwargs={'pk': self.data_id})
+        # return HttpResponseRedirect(reverse_lazy(newCommercialAccommodationList, kwargs={'pk': pk}))
+        return reverse('newCommercialAccommodationList', kwargs={'pk': self.data_id})
 
 
 class deleteAccommodation(DeleteView):
@@ -447,35 +447,23 @@ class deleteAccommodation(DeleteView):
         return context
 
 def newUpdateAccommodation(request, pk, pk1):
-    print('primary key:',pk, 'primary key1',pk1)
     CommercialId= Commercial.objects.get(id=pk)
-    print (CommercialId)
     AccomodationData= Accommodation.objects.get(id=pk1)
-    # print(AccomodationData)
     form=CreateAccommodation(instance=AccomodationData)
-    print("-------------------FORM--------------")
-    # print(form)
-    print("-------------------END FORM--------------")
-    
-    if request.method == "POST":
-        form=CreateAccommodation(request.POST, instance=AccomodationData)
-        # form.instance.CommercialAccommodation=CommercialId
-        
-        print("-------------------FORM--------------")
-        print(form)
-        print("-------------------END FORM--------------")
-        if form.is_valid():
-            print("----------ES VÁLIDO--------")
-            accomodationUpdate=form.save()
-            accomodationUpdate.save()
-            print("----------GRABADOO--------")
-            return redirect('/home/commercial')
-        else:
-            print("--------------Error-----------")
-            return redirect('/home/commercial')
+
     context={'form': form}
     context['pk']=pk
     context['pk1']=pk1
+    
+    if request.method == "POST":
+        form=CreateAccommodation(request.POST, instance=AccomodationData)
+        if form.is_valid():
+
+            accomodationUpdate=form.save()
+            return HttpResponseRedirect(reverse_lazy(newCommercialAccommodationList, kwargs={'pk': pk}))
+        else:
+            print("--------------Error-----------")
+            return redirect('/home/commercial')
     context['update']= True
 
     return render(request,'core/accommodation_form.html',context)
